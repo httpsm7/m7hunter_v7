@@ -1,0 +1,32 @@
+id: debug-endpoints-exposed
+info:
+  name: Debug/Admin Endpoints Exposed
+  author: Sharlix
+  severity: medium
+  description: Debug or admin endpoints are publicly accessible
+  tags: exposure,debug,admin,m7-custom
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/debug"
+      - "{{BaseURL}}/console"
+      - "{{BaseURL}}/admin/debug"
+      - "{{BaseURL}}/actuator"
+      - "{{BaseURL}}/actuator/env"
+      - "{{BaseURL}}/actuator/heapdump"
+      - "{{BaseURL}}/_debug"
+      - "{{BaseURL}}/phpinfo.php"
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "Spring Boot"
+          - "heapdump"
+          - "PHP Version"
+          - "Whoops!"
+          - "DebugKit"
+        condition: or
+      - type: status
+        status:
+          - 200

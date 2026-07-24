@@ -1,0 +1,27 @@
+id: cors-arbitrary-origin
+info:
+  name: CORS Arbitrary Origin Reflection
+  author: Sharlix
+  severity: high
+  description: Server reflects arbitrary Origin in ACAO header — cross-origin data theft
+  tags: cors,misconfig,m7-custom
+  reference:
+    - https://portswigger.net/web-security/cors
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/"
+      - "{{BaseURL}}/api/v1/"
+    headers:
+      Origin: "https://evil.attacker.com"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Origin: https://evil.attacker.com"
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Credentials: true"

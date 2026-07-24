@@ -1,0 +1,28 @@
+id: exposed-env-file
+info:
+  name: Exposed .env File
+  author: Sharlix
+  severity: high
+  description: .env file is publicly accessible, leaking credentials and API keys
+  tags: exposure,config,secrets,m7-custom
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.env"
+      - "{{BaseURL}}/.env.local"
+      - "{{BaseURL}}/.env.production"
+      - "{{BaseURL}}/.env.backup"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "DB_PASSWORD"
+          - "APP_KEY"
+          - "SECRET_KEY"
+          - "API_KEY"
+          - "DATABASE_URL"
+        condition: or
+      - type: status
+        status:
+          - 200

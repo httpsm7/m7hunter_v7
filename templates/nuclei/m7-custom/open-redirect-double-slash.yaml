@@ -1,0 +1,30 @@
+id: open-redirect-double-slash
+info:
+  name: Open Redirect via Double Slash
+  author: Sharlix
+  severity: medium
+  description: Application redirects to arbitrary domain via double-slash bypass
+  tags: redirect,m7-custom
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/redirect?url=//evil.attacker.com"
+      - "{{BaseURL}}/go?to=//evil.attacker.com"
+      - "{{BaseURL}}/out?url=//evil.attacker.com"
+      - "{{BaseURL}}?next=//evil.attacker.com"
+      - "{{BaseURL}}?return=//evil.attacker.com"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "Location: //evil.attacker.com"
+          - "Location: https://evil.attacker.com"
+        condition: or
+      - type: status
+        status:
+          - 301
+          - 302
+          - 307
+          - 308

@@ -1,0 +1,29 @@
+id: graphql-introspection-enabled
+info:
+  name: GraphQL Introspection Enabled
+  author: Sharlix
+  severity: medium
+  description: GraphQL introspection is enabled, exposing full schema to attackers
+  tags: graphql,m7-custom,exposure
+  reference:
+    - https://graphql.org/learn/introspection/
+
+requests:
+  - method: POST
+    path:
+      - "{{BaseURL}}/graphql"
+      - "{{BaseURL}}/api/graphql"
+      - "{{BaseURL}}/v1/graphql"
+    headers:
+      Content-Type: application/json
+    body: '{"query":"{__schema{types{name}}}"}'
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "__schema"
+          - "types"
+        condition: and
+      - type: status
+        status:
+          - 200

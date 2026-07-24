@@ -1,0 +1,23 @@
+id: s3-bucket-readable
+info:
+  name: S3 Bucket Publicly Readable
+  author: Sharlix
+  severity: high
+  description: AWS S3 bucket is publicly accessible and listing objects
+  tags: aws,s3,cloud,exposure,m7-custom
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "ListBucketResult"
+          - "<Key>"
+          - "<Contents>"
+        condition: and
+      - type: status
+        status:
+          - 200

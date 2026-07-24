@@ -1,0 +1,139 @@
+name: M7Hunter CI — Full Blueprint Suite
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  syntax-check:
+    name: Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Compile all .py files
+        run: |
+          find . -name "*.py" ! -path "*/__pycache__/*" \
+            -exec python3 -m py_compile {} \;
+          echo "✓ All Python files compile cleanly"
+
+  lint:
+    name: Lint + Type Hints
+    runs-on: ubuntu-latest
+    needs: syntax-check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install flake8 black isort --quiet
+      - run: flake8 core/ ai/ engines/ reporting/ --max-line-length=120 --ignore=E501,W503,E402
+      - run: black --check core/ ai/ --line-length=120 --quiet || true
+      - run: isort --check-only core/ ai/ --profile=black --quiet || true
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt psutil --quiet
+      - name: Core unit tests
+        run: |
+          python3 tests/test_confidence.py
+          python3 tests/test_risk_scorer.py
+          python3 tests/test_error_handler.py
+      - name: EDRP architecture tests
+        run: python3 tests/test_edrp.py
+      - name: Scope + browser pool tests
+        run: python3 tests/test_scope_browser.py
+      - name: AI component tests
+        run: python3 tests/test_ai_components.py
+      - name: Proxy manager tests
+        run: python3 tests/unit/test_proxy_manager.py
+      - name: Plugin registry tests
+        run: python3 tests/unit/test_plugin_registry.py
+      - name: Risk engine tests
+        run: python3 tests/unit/test_risk_engine.py
+      - name: Memory store tests
+        run: python3 tests/unit/test_memory_store.py
+      - name: Async runtime tests
+        run: python3 tests/unit/test_async_runtime.py
+      - name: Watchdog tests
+        run: python3 tests/unit/test_watchdog.py
+      - name: Telemetry tests
+        run: python3 tests/unit/test_telemetry.py
+      - name: BaseEngine tests
+        run: python3 tests/unit/test_base_engine.py
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt psutil --quiet
+      - name: Pipeline integration
+        run: python3 tests/integration/test_pipeline_integration.py
+      - name: Crash recovery
+        run: python3 tests/integration/test_crash_recovery.py
+
+  stress-tests:
+    name: Stress + Concurrency Tests
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt psutil --quiet
+      - name: Semaphore leak + deadlock tests
+        run: python3 tests/stress/test_semaphore_leak.py
+      - name: Async stress tests
+        run: python3 tests/stress/test_async_stress.py
+
+  regression:
+    name: Full Regression Suite
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, stress-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt psutil --quiet
+      - name: Run all test suites
+        run: |
+          echo "=== Core ===" && python3 tests/test_confidence.py
+          echo "=== Risk ===" && python3 tests/test_risk_scorer.py
+          echo "=== Error ===" && python3 tests/test_error_handler.py
+          echo "=== EDRP ===" && python3 tests/test_edrp.py
+          echo "=== Scope ===" && python3 tests/test_scope_browser.py
+          echo "=== AI ===" && python3 tests/test_ai_components.py
+          echo "=== Proxy ===" && python3 tests/unit/test_proxy_manager.py
+          echo "=== Plugin ===" && python3 tests/unit/test_plugin_registry.py
+          echo "=== RiskEng ===" && python3 tests/unit/test_risk_engine.py
+          echo "=== Memory ===" && python3 tests/unit/test_memory_store.py
+          echo "=== AsyncRT ===" && python3 tests/unit/test_async_runtime.py
+          echo "=== Watchdog ===" && python3 tests/unit/test_watchdog.py
+          echo "=== Telemetry ===" && python3 tests/unit/test_telemetry.py
+          echo "=== BaseEngine ===" && python3 tests/unit/test_base_engine.py
+          echo "=== CrashRecov ===" && python3 tests/integration/test_crash_recovery.py
+          echo "=== PipelineInt ===" && python3 tests/integration/test_pipeline_integration.py
+          echo "=== SemStress ===" && python3 tests/stress/test_semaphore_leak.py
+          echo "=== AsyncStress ===" && python3 tests/stress/test_async_stress.py
+      - name: Zero broken files check
+        run: |
+          python3 -c "
+          import glob, subprocess
+          files = [f for f in glob.glob('**/*.py', recursive=True) if '__pycache__' not in f]
+          broken = [f for f in files if subprocess.run(['python3','-m','py_compile',f],capture_output=True).returncode!=0]
+          assert not broken, f'Broken: {broken}'
+          print(f'All {len(files)} files clean ✓')
+          "

@@ -1,0 +1,46 @@
+# docker-compose.yml — M7Hunter V7
+# Python 3.13 + Go 1.24.3 compatible
+# MilkyWay Intelligence | AUTHORIZED USE ONLY
+
+version: "3.9"
+
+services:
+  m7hunter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GO_VERSION: "1.24.3"
+        PYTHON_VERSION: "3.13"
+    image: m7hunter:v7
+    container_name: m7hunter
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - M7HUNTER_KEY=${M7HUNTER_KEY:-}
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://localhost:11434}
+    volumes:
+      - ./output:/app/output
+      - ./config:/app/config
+      - m7_vault:/home/m7/.m7hunter
+      - m7_nuclei:/home/m7/.config/nuclei
+      - m7_gf:/home/m7/.gf
+    command: ["--help"]
+
+  # Ollama for local AI (optional)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: m7_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    profiles:
+      - ai
+
+volumes:
+  m7_vault:
+  m7_nuclei:
+  m7_gf:
+  ollama_data:

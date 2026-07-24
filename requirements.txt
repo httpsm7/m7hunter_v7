@@ -1,0 +1,47 @@
+# M7Hunter V7 — Python Dependencies
+# Python 3.13 Compatible (verified)
+# Last updated: 2026-05 | MilkyWay Intelligence
+
+# ── System Monitoring ─────────────────────────────────────────────────
+psutil>=6.1.0                   # 6.x = Python 3.13 support
+
+# ── HTTP & Networking ─────────────────────────────────────────────────
+httpx[http2]>=0.28.1            # 0.28+ = Python 3.13 + h2 fix
+requests>=2.32.3
+aiohttp>=3.11.10                # 3.11+ = Python 3.13 support
+websockets>=13.1                # 13.x = Python 3.13 support
+aiofiles>=24.1.0
+
+# ── Browser Automation ────────────────────────────────────────────────
+playwright>=1.49.0              # 1.49+ = Python 3.13 support
+
+# ── Security & Crypto ─────────────────────────────────────────────────
+cryptography>=44.0.0            # 44.x = Python 3.13 support
+pyjwt[crypto]>=2.10.1
+keyring>=25.6.0
+
+# ── Config & Validation ───────────────────────────────────────────────
+pyyaml>=6.0.2
+pydantic>=2.10.6                # 2.9+ = Python 3.13 support (pydantic-core 2.13+)
+
+# ── Structured Logging ────────────────────────────────────────────────
+structlog>=25.1.0
+
+# ── Web Dashboard ─────────────────────────────────────────────────────
+flask>=3.1.0
+flask-socketio>=5.5.1
+python-socketio>=5.12.1
+python-engineio>=4.11.2
+
+# ── Parsing ───────────────────────────────────────────────────────────
+beautifulsoup4>=4.13.3
+lxml>=5.3.1                     # 5.3+ = Python 3.13 support
+jinja2>=3.1.5
+
+# ── Async ────────────────────────────────────────────────────────────
+anyio>=4.8.0
+
+# ── Testing ───────────────────────────────────────────────────────────
+pytest>=8.3.5
+pytest-asyncio>=0.25.3          # 0.24+ = Python 3.13 support
+pytest-timeout>=2.3.1

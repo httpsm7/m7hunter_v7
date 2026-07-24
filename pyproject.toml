@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=72.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "m7hunter"
+version = "7.0.0"
+description = "Event-Driven Resource-Orchestrated Security Automation Framework"
+authors = [{ name = "Sharlix", email = "m7@milkyway.intel" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["security", "bug-bounty", "automation", "recon"]
+
+dependencies = [
+    "psutil>=6.1.0",
+    "httpx[http2]>=0.28.1",
+    "requests>=2.32.3",
+    "aiohttp>=3.11.10",
+    "websockets>=13.1",
+    "aiofiles>=24.1.0",
+    "playwright>=1.49.0",
+    "cryptography>=44.0.0",
+    "pyjwt[crypto]>=2.10.1",
+    "keyring>=25.6.0",
+    "pyyaml>=6.0.2",
+    "pydantic>=2.10.6",
+    "structlog>=25.1.0",
+    "flask>=3.1.0",
+    "flask-socketio>=5.5.1",
+    "python-socketio>=5.12.1",
+    "python-engineio>=4.11.2",
+    "beautifulsoup4>=4.13.3",
+    "lxml>=5.3.1",
+    "jinja2>=3.1.5",
+    "anyio>=4.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
+    "pytest-timeout>=2.3.1",
+    "flake8>=7.1.0",
+    "black>=24.10.0",
+    "isort>=5.13.2",
+]
+
+[project.scripts]
+m7hunter = "m7hunter:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+timeout = 60
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 120
+target-version = ["py311", "py312", "py313"]
+
+[tool.isort]
+profile = "black"
+line_length = 120

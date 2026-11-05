@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7Hunter V7 — Architecture Map</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',Arial,sans-serif;padding:20px}
+h1{color:#58a6ff;text-align:center;font-size:26px;margin-bottom:4px}
+.sub{text-align:center;color:#8b949e;font-size:13px;margin-bottom:24px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;font-size:12px}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+
+/* Groups */
+.group{border-radius:12px;padding:14px 16px 16px;margin-bottom:14px;border:1px solid}
+.g-entry{border-color:#30363d;background:#161b22}
+.g-core{border-color:#534AB7;background:rgba(83,74,183,0.08)}
+.g-ai{border-color:#0F6E56;background:rgba(15,110,86,0.08)}
+.g-recon{border-color:#185FA5;background:rgba(24,95,165,0.08)}
+.g-surface{border-color:#993C1D;background:rgba(153,60,29,0.08)}
+.g-param{border-color:#3B6D11;background:rgba(59,109,17,0.08)}
+.g-deep{border-color:#993556;background:rgba(153,53,86,0.08)}
+.g-advanced{border-color:#854F0B;background:rgba(133,79,11,0.08)}
+.g-platform{border-color:#5F5E5A;background:rgba(95,94,90,0.08)}
+.g-engines{border-color:#185FA5;background:rgba(24,95,165,0.08)}
+.g-report{border-color:#3B6D11;background:rgba(59,109,17,0.08)}
+.g-integrations{border-color:#993C1D;background:rgba(153,60,29,0.08)}
+
+.group-title{font-size:13px;font-weight:600;margin-bottom:10px;letter-spacing:.5px}
+.g-core .group-title{color:#AFA9EC}
+.g-ai .group-title{color:#5DCAA5}
+.g-recon .group-title{color:#85B7EB}
+.g-surface .group-title{color:#F0997B}
+.g-param .group-title{color:#97C459}
+.g-deep .group-title{color:#ED93B1}
+.g-advanced .group-title{color:#EF9F27}
+.g-platform .group-title{color:#B4B2A9}
+.g-engines .group-title{color:#85B7EB}
+.g-report .group-title{color:#97C459}
+.g-integrations .group-title{color:#F0997B}
+.g-entry .group-title{color:#e6edf3}
+
+/* Cards */
+.cards{display:flex;flex-wrap:wrap;gap:8px}
+.card{background:#21262d;border:1px solid #30363d;border-radius:8px;padding:8px 12px;min-width:120px;flex:1}
+.card.new{border-color:#0F6E56;background:rgba(15,110,86,0.12)}
+.card.upgraded{border-color:#185FA5;background:rgba(24,95,165,0.10)}
+.card-name{font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:3px}
+.card-desc{font-size:11px;color:#8b949e;line-height:1.4}
+.badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-left:4px;vertical-align:middle}
+.badge.new{background:#0F6E56;color:#E1F5EE}
+.badge.upg{background:#185FA5;color:#E6F1FB}
+
+/* Arrow between groups */
+.arrow{text-align:center;color:#8b949e;font-size:18px;margin:2px 0;line-height:1}
+
+/* Flow diagram inline SVG */
+.flow-wrap{overflow-x:auto;margin-bottom:16px}
+
+/* Connections table */
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+th{background:#21262d;color:#8b949e;padding:6px 10px;text-align:left;font-weight:600;border-bottom:1px solid #30363d}
+td{padding:6px 10px;border-bottom:1px solid #21262d;color:#e6edf3;vertical-align:top}
+td:first-child{color:#58a6ff;font-weight:600;white-space:nowrap}
+td code{background:#21262d;padding:1px 5px;border-radius:3px;font-size:11px;color:#79c0ff}
+
+.footer{text-align:center;color:#8b949e;font-size:11px;margin-top:24px;padding-top:16px;border-top:1px solid #21262d}
+</style>
+</head>
+<body>
+
+<h1>🎯 M7Hunter V7 — Architecture Map</h1>
+<div class="sub">MilkyWay Intelligence · Author: Sharlix · Full A→Z Pipeline · 30 Modules · 81 Python Files</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#0F6E56"></div>New Module ★</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div>Upgraded ★</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#21262d;border:1px solid #30363d"></div>Existing</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>Core</div>
+</div>
+
+<!-- ENTRY -->
+<div class="group g-entry">
+  <div class="group-title">⬛ ENTRY POINT</div>
+  <div class="cards">
+    <div class="card"><div class="card-name">m7hunter.py</div><div class="card-desc">CLI entry · argument parsing · boots pipeline</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- CORE -->
+<div class="group g-core">
+  <div class="group-title">🟣 CORE LAYER</div>
+  <div class="cards">
+    <div class="card upgraded"><div class="card-name">pipeline_v7.py <span class="badge upg">REBUILT</span></div><div class="card-desc">A→Z orchestrator · 5 parallel groups · FP fix · CEO chain · checkpoint fix</div></div>
+    <div class="card"><div class="card-name">ceo_engine.py</div><div class="card-desc">Gate · pause/resume · auto-chain · confidence threshold</div></div>
+    <div class="card upgraded"><div class="card-name">plugin_loader.py <span class="badge upg">FIXED</span></div><div class="card-desc">Discovers all 30 steps · NUM_TO_NAME complete map</div></div>
+    <div class="card"><div class="card-name">session_manager.py</div><div class="card-desc">Auth · cookies · multi-session (userA + userB)</div></div>
+    <div class="card"><div class="card-name">rate_bypass.py</div><div class="card-desc">Jitter · stealth delays · WAF evasion</div></div>
+    <div class="card"><div class="card-name">audit_logger.py</div><div class="card-desc">Step tracking · FP log · scan ID</div></div>
+    <div class="card"><div class="card-name">tor_manager.py</div><div class="card-desc">Tor rotation · proxychains</div></div>
+    <div class="card"><div class="card-name">http_client.py</div><div class="card-desc">HTTP/2 · async · sync helpers</div></div>
+    <div class="card"><div class="card-name">notifier.py</div><div class="card-desc">Telegram alerts · scan events</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- AI + CONFIRM side by side -->
+<div style="display:flex;gap:10px;margin-bottom:14px">
+  <div class="group g-ai" style="flex:1;margin:0">
+    <div class="group-title">🟢 AI LAYER</div>
+    <div class="cards">
+      <div class="card new"><div class="card-name">ollama_ai.py <span class="badge new">NEW</span></div><div class="card-desc">Llama3 · smart FP reduction · analyze_response() · train_from_finding()</div></div>
+      <div class="card"><div class="card-name">offline_ai.py</div><div class="card-desc">Pattern-based FP fallback · no internet needed</div></div>
+      <div class="card"><div class="card-name">pipeline_controller.py</div><div class="card-desc">AI pipeline gating · observer pattern</div></div>
+    </div>
+  </div>
+  <div class="group g-ai" style="flex:1;margin:0;border-color:#854F0B;background:rgba(133,79,11,0.08)">
+    <div class="group-title" style="color:#EF9F27">🟡 CONFIRM LAYER</div>
+    <div class="cards">
+      <div class="card"><div class="card-name">confidence.py</div><div class="card-desc">Multi-signal scoring · threshold gate</div></div>
+      <div class="card"><div class="card-name">risk_scorer.py</div><div class="card-desc">CVSS-like scoring · severity assignment</div></div>
+    </div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 0: RECON -->
+<div class="group g-recon">
+  <div class="group-title">🔵 GROUP 0 — RECON &nbsp;(sequential · A→B→C→D→E · each feeds next)</div>
+  <div class="cards">
+    <div class="card upgraded"><div class="card-name">01 subdomain <span class="badge upg">★</span></div><div class="card-desc">subfinder · amass · permutation scanning (dnsgen-style) · ASN recon</div></div>
+    <div class="card"><div class="card-name">02 dns</div><div class="card-desc">dnsx · A/CNAME/MX/NS/TXT · resolves subdomains</div></div>
+    <div class="card"><div class="card-name">03 probe</div><div class="card-desc">httpx · live host detection · status codes · tech detect</div></div>
+    <div class="card"><div class="card-name">04 ports</div><div class="card-desc">naabu · nmap · open port fingerprinting</div></div>
+    <div class="card"><div class="card-name">05 crawl</div><div class="card-desc">katana · waybackurls · gau · JS files · params · SPA crawler</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 1: SURFACE -->
+<div class="group g-surface">
+  <div class="group-title">🟠 GROUP 1 — FAST SURFACE SCAN &nbsp;(parallel · uses live_hosts + subdomains)</div>
+  <div class="cards">
+    <div class="card"><div class="card-name">06 nuclei</div><div class="card-desc">Template-based scanning · CVEs · misconfigs</div></div>
+    <div class="card upgraded"><div class="card-name">16 github <span class="badge upg">★</span></div><div class="card-desc">30 dorks · secret regex · TruffleHog · Gitleaks · AWS/Stripe/Slack keys</div></div>
+    <div class="card upgraded"><div class="card-name">13 takeover <span class="badge upg">★</span></div><div class="card-desc">50 fingerprints · NXDOMAIN detect · NS takeover · GitHub/Heroku/Netlify/S3</div></div>
+    <div class="card new"><div class="card-name">28 clickjacking <span class="badge new">NEW</span></div><div class="card-desc">X-Frame-Options · CSP frame-ancestors · PoC HTML generator</div></div>
+    <div class="card"><div class="card-name">25 csrf</div><div class="card-desc">Token validation · SameSite · state param</div></div>
+    <div class="card upgraded"><div class="card-name">09 cors <span class="badge upg">★</span></div><div class="card-desc">Credentialed CORS · JSONP injection · postMessage origin check</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 2: PARAM -->
+<div class="group g-param">
+  <div class="group-title">🟢 GROUP 2 — PARAMETER VULN SCAN &nbsp;(parallel · uses crawled URLs)</div>
+  <div class="cards">
+    <div class="card upgraded"><div class="card-name">07 xss <span class="badge upg">★</span></div><div class="card-desc">72 payloads · context-aware (HTML/attr/JS/URL) · blind XSS · DOM XSS · stored marker</div></div>
+    <div class="card"><div class="card-name">11 ssrf</div><div class="card-desc">Cloud metadata · SSRF bypass chains · OOB callbacks</div></div>
+    <div class="card new"><div class="card-name">30 open redirect <span class="badge new">NEW</span></div><div class="card-desc">12 bypass payloads · OAuth/SSRF/XSS chain identify · dedup normalized</div></div>
+    <div class="card upgraded"><div class="card-name">10 lfi <span class="badge upg">★</span></div><div class="card-desc">Path traversal · log poisoning → RCE · PHP session poisoning</div></div>
+    <div class="card"><div class="card-name">22 idor</div><div class="card-desc">Multi-session · UUID bruteforce · object reference testing</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 3: DEEP -->
+<div class="group g-deep">
+  <div class="group-title">🩷 GROUP 3 — DEEP TECH SCAN &nbsp;(parallel · requires tech context)</div>
+  <div class="cards">
+    <div class="card upgraded"><div class="card-name">08 sqli <span class="badge upg">★</span></div><div class="card-desc">Error-based · boolean blind · time-based blind · 14 DB error sigs · sqlmap deep</div></div>
+    <div class="card upgraded"><div class="card-name">18 ssti <span class="badge upg">★</span></div><div class="card-desc">8 engines: Jinja2/Twig/FreeMarker/Velocity/ERB/Spring/Smarty/Pebble · RCE chains</div></div>
+    <div class="card upgraded"><div class="card-name">19 jwt <span class="badge upg">★</span></div><div class="card-desc">alg:none · weak secret · RS256→HS256 confusion · kid inject · jku SSRF · priv escalation</div></div>
+    <div class="card upgraded"><div class="card-name">20 graphql <span class="badge upg">★</span></div><div class="card-desc">Introspection · IDOR · alias batching · deep nesting DoS · mutations · subscriptions</div></div>
+    <div class="card new"><div class="card-name">29 oauth <span class="badge new">NEW</span></div><div class="card-desc">State CSRF · redirect_uri bypass · token leakage · scope escalation · implicit flow</div></div>
+    <div class="card"><div class="card-name">23 xxe</div><div class="card-desc">XML external entities · OOB exfil · blind XXE</div></div>
+    <div class="card"><div class="card-name">27 nosql</div><div class="card-desc">MongoDB injection · blind timing · operator injection</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 4: ADVANCED -->
+<div class="group g-advanced">
+  <div class="group-title">🟡 GROUP 4 — ADVANCED ATTACK CHAINS &nbsp;(parallel · protocol-level)</div>
+  <div class="cards">
+    <div class="card"><div class="card-name">24 smuggling</div><div class="card-desc">CL.TE · TE.CL · H2.TE downgrade · request tunneling</div></div>
+    <div class="card"><div class="card-name">26 race</div><div class="card-desc">Last-byte sync · HTTP/2 concurrent · coupon abuse · double-spend</div></div>
+    <div class="card"><div class="card-name">21 host header</div><div class="card-desc">Password reset poisoning · cache poisoning · SSRF via host</div></div>
+    <div class="card"><div class="card-name">proto pollution</div><div class="card-desc">Node.js __proto__ · constructor.prototype · client+server side</div></div>
+    <div class="card"><div class="card-name">websocket</div><div class="card-desc">WS endpoint discovery · auth bypass · injection testing</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- GROUP 5: PLATFORM -->
+<div class="group g-platform">
+  <div class="group-title">⚪ GROUP 5 — PLATFORM SPECIFIC &nbsp;(parallel · conditional)</div>
+  <div class="cards">
+    <div class="card"><div class="card-name">15 wpscan</div><div class="card-desc">WordPress · plugins · themes · user enum</div></div>
+    <div class="card"><div class="card-name">17 cloud</div><div class="card-desc">AWS/GCP/Azure misconfigs · bucket exposure · metadata</div></div>
+    <div class="card"><div class="card-name">14 screenshot</div><div class="card-desc">GoWitness · visual recon · live host snapshots</div></div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- ENGINES + REPORTING -->
+<div style="display:flex;gap:10px;margin-bottom:14px">
+  <div class="group g-engines" style="flex:1;margin:0">
+    <div class="group-title">🔵 ENGINES</div>
+    <div class="cards">
+      <div class="card new"><div class="card-name">xss_payloads_db <span class="badge new">NEW</span></div><div class="card-desc">72 payloads · 7 context categories · FP-risk ranked · context detection fn</div></div>
+      <div class="card"><div class="card-name">double_verify</div><div class="card-desc">Re-confirms high/critical · confidence boost</div></div>
+      <div class="card"><div class="card-name">findings_engine</div><div class="card-desc">Central registry · dedup · stats · export</div></div>
+      <div class="card"><div class="card-name">spa_crawler</div><div class="card-desc">React/Vue/Next.js · Playwright headless</div></div>
+      <div class="card"><div class="card-name">idor_engine</div><div class="card-desc">Object reference testing · multi-user</div></div>
+      <div class="card"><div class="card-name">chain_engine</div><div class="card-desc">CEO auto-chain executor</div></div>
+    </div>
+  </div>
+  <div class="group g-report" style="flex:1;margin:0">
+    <div class="group-title">🟢 REPORTING</div>
+    <div class="cards">
+      <div class="card new"><div class="card-name">bug_bounty_report <span class="badge new">NEW</span></div><div class="card-desc">HackerOne/Bugcrowd format · steps to reproduce · impact · CVSS · remediation</div></div>
+      <div class="card"><div class="card-name">report_generator</div><div class="card-desc">HTML · Markdown · JSON · Burp XML</div></div>
+    </div>
+  </div>
+</div>
+<div class="arrow">↓</div>
+
+<!-- INTEGRATIONS -->
+<div class="group g-integrations">
+  <div class="group-title">🟠 INTEGRATIONS + OUTPUT</div>
+  <div class="cards">
+    <div class="card"><div class="card-name">telegram_bot.py</div><div class="card-desc">Real-time alerts · remote control · finding notifications</div></div>
+    <div class="card"><div class="card-name">web/dashboard.py</div><div class="card-desc">Live UI at localhost:8719 · real-time findings stream</div></div>
+    <div class="card new"><div class="card-name">Ollama AI <span class="badge new">NEW</span></div><div class="card-desc">Llama3 local · no cloud · privacy-safe analysis</div></div>
+    <div class="card"><div class="card-name">Interactsh OOB</div><div class="card-desc">Out-of-band callbacks · blind XSS/SSRF/XXE confirm</div></div>
+    <div class="card"><div class="card-name">results/ output</div><div class="card-desc">Per-scan folder · timestamped · all formats</div></div>
+  </div>
+</div>
+
+<!-- CONNECTIONS TABLE -->
+<div style="margin-top:24px;margin-bottom:8px">
+<h2 style="color:#58a6ff;font-size:16px;margin-bottom:12px">🔗 Key Connections (What Feeds What)</h2>
+<table>
+<tr><th>FROM</th><th>TO</th><th>Data / Trigger</th></tr>
+<tr><td>01 subdomain</td><td>02 dns → 03 probe → 04 ports → 05 crawl</td><td><code>subdomains.txt</code> feeds each next step sequentially</td></tr>
+<tr><td>05 crawl</td><td>ALL Group 2/3/4 vuln modules</td><td><code>urls.txt</code> · <code>js_files.txt</code> · <code>params.txt</code></td></tr>
+<tr><td>03 probe</td><td>ALL Group 1/2/3 modules</td><td><code>live_hosts.txt</code> · <code>fmt_url.txt</code></td></tr>
+<tr><td>pipeline_v7</td><td>ollama_ai → offline_ai</td><td>Every <code>add_finding()</code> call — AI filters FP before registering</td></tr>
+<tr><td>ceo_engine</td><td>Any step (chain trigger)</td><td>Finding confirmed → CEO fires chain step in background thread</td></tr>
+<tr><td>10 lfi (confirmed)</td><td>LFILogPoisoner</td><td>Auto-chains into log poisoning → RCE attempt</td></tr>
+<tr><td>07 xss</td><td>xss_payloads_db</td><td>Context probe → detect HTML/attr/JS → pick best payloads</td></tr>
+<tr><td>19 jwt</td><td>JWKS endpoint</td><td>Fetches public key for RS256→HS256 confusion attack</td></tr>
+<tr><td>ALL modules</td><td>findings_engine → double_verify → report</td><td><code>add_finding()</code> → dedup → AI verify → CEO gate → register</td></tr>
+<tr><td>pipeline end</td><td>bug_bounty_report + report_generator</td><td>All confirmed findings → HTML + MD + JSON + BB format</td></tr>
+<tr><td>pipeline end</td><td>telegram_bot · dashboard</td><td>Scan complete notification + live UI update</td></tr>
+</table>
+</div>
+
+<div class="footer">
+M7Hunter V7 · MilkyWay Intelligence · Author: Sharlix<br>
+30 Modules · 81 Python Files · 3 New Modules · 9 Upgraded Modules<br>
+Build: Cycles 1→3 · Books: XSS Payloads · Bug Bounty Bootcamp · Bug Hunter Methodology · CEH · Kali Linux PWK · Coding for Pentester
+</div>
+</body>
+</html>
